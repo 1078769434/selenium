@@ -1,6 +1,8 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import time
+
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -39,7 +41,13 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 
-driver = webdriver.Chrome()
+# 创建ChromeOptions对象，并配置为无头模式
+chrome_options = Options()
+chrome_options.add_argument('--headless')  # 启用无头模式
+chrome_options.add_argument('--disable-gpu')  # 禁用GPU加速
+
+# 创建Chrome浏览器实例
+driver = webdriver.Chrome(options=chrome_options)
 departments_2 = {
     '政务公开': {},
     # 添加更多部门...
@@ -150,7 +158,7 @@ def get_page_data( start_page, end_page, departments):
                                 title=title,#标题
                                 # content=content,
                                 published=maketime,#发布时间
-                                description=description,#摘要
+                                description=str(description),#摘要
                                 category=columnname,#分类
                                 keywords=keywords,#关键词
                                 site_domain=sitedomain#域名
@@ -168,7 +176,7 @@ def get_page_data( start_page, end_page, departments):
                             # 可以在这里记录日志，报告问题，或者采取其他措施
                             continue  # 跳过当前数据，继续处理下一个数据
 
-start_page = 8
+start_page = 100
 # 开始页
 end_page = 700    # 结束页
 departments_2 = {}  # 初始化departments字典
