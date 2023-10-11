@@ -12,7 +12,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.exc import IntegrityError
 
-db_url = 'postgresql://wH2020:Rcts3We0xdo9@43.140.251.32:5455/postgres'
+db_url = ''#数据库连接
 engine = create_engine(db_url)
 connection = engine.connect()
 # 创建数据模型
