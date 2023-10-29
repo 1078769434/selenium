@@ -8,7 +8,7 @@ class WendengSearchSpider(scrapy.Spider):
     allowed_domains = ["www.wendeng.gov.cn"]
 
     def start_requests(self):
-        for page_number in range(1700, 1800):
+        for page_number in range(1124, 3522):
             print(page_number)
             url = f"http://www.wendeng.gov.cn/jsearchfront/search.do?websiteid=371081000500000&q=&p={page_number}&pg=20&cateid=1122&tpl=1361&checkError=1"
             # yield scrapy.Request(url=f"http://www.wendeng.gov.cn/jsearchfront/search.do?websiteid=371081000500000&q=&p={page_number}&pg=20&cateid=1122&tpl=1361&checkError=1")
@@ -39,6 +39,8 @@ class WendengSearchSpider(scrapy.Spider):
         item['keywords'] = response.xpath("/html/head/meta[@name='keywords']/@content").extract_first()
         item['site_domain'] = response.xpath("/html/head/meta[@name='SiteDomain']/@content").extract_first()
         # 使用 yield 返回 Item 对象
-        item['content'] = response.xpath("//*[@id='zoom']").extract_first()
+        content_list= response.xpath("//*[@id='zoom']//text()").extract()
+        content_text=[content.strip() for content in content_list]
+        item['content'] = content_text
         # print(item)
         yield item

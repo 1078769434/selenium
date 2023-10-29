@@ -1,6 +1,6 @@
 
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, ARRAY, Boolean, func
+from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, ARRAY, Boolean, func, update
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.exc import IntegrityError
 
@@ -62,9 +62,11 @@ class SQLAlchemyPipeline:
             except IntegrityError as e:
                 self.session.rollback()
         else:
-            # 如果已存在相同的记录，跳过插入操作
-            pass
 
+            update_statement = update(WebPage).values(content=item['content']).where(WebPage.url == item['url'])
+            self.session.execute(update_statement)
+            # 提交事务
+            self.session.commit()
         return item
     def close_spider(self, spider):
         self.session.close()
